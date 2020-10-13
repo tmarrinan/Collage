@@ -238,12 +238,17 @@ private:
     template <class T>
     void _write(const T& value, const boost::false_type&)
     {
-        _writeSerializable(value, boost::is_base_of<servus::Serializable, T>());
+        boost::is_base_of<servus::Serializable, T> base_of = boost::is_base_of<servus::Serializable, T>();
+        _writeSerializable(value, &base_of);
     }
 
     /** Write a serializable object. */
     template <class T>
-    void _writeSerializable(const T& value, const boost::true_type&);
+    void _writeSerializable(const T& value, const boost::true_type*);
+
+    /** Catch for non-serializable object. */
+    template <class T>
+    void _writeSerializable(const T&, const boost::false_type*);
 
     /** Write an Array of POD data */
     template <class T>

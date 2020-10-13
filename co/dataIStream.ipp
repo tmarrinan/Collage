@@ -57,10 +57,15 @@ inline DataIStream& DataIStream::operator>>(Object*& object)
 
 /** Deserialize an inline serializable object. */
 template <class T>
-void DataIStream::_readSerializable(T& object, const boost::true_type&)
+void DataIStream::_readSerializable(T& object, const boost::true_type*)
 {
     const size_t size = read<size_t>();
     object.fromBinary(getRemainingBuffer(size), size);
+}
+
+template <class T>
+void DataIStream::_readSerializable(T&, const boost::false_type*)
+{
 }
 
 /** @cond IGNORE */

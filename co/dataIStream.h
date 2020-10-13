@@ -217,12 +217,17 @@ private:
     template <class T>
     void _read(T& value, const boost::false_type&)
     {
-        _readSerializable(value, boost::is_base_of<servus::Serializable, T>());
+        boost::is_base_of<servus::Serializable, T> base_of = boost::is_base_of<servus::Serializable, T>();
+        _readSerializable(value, &base_of);
     }
 
     /** Read a serializable object. */
     template <class T>
-    void _readSerializable(T& value, const boost::true_type&);
+    void _readSerializable(T& value, const boost::true_type*);
+
+    /** Catch for non-serializable object. */
+    template <class T>
+    void _readSerializable(T&, const boost::false_type*);
 
     /** Read an Array of POD data */
     template <class T>

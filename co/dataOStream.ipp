@@ -47,10 +47,15 @@ inline DataOStream& DataOStream::operator<<(const Object* const& object)
 
 /** Serialize an inline serializable object. */
 template <class T>
-void DataOStream::_writeSerializable(const T& object, const boost::true_type&)
+void DataOStream::_writeSerializable(const T& object, const boost::true_type*)
 {
     const auto& data = object.toBinary();
     (*this) << data.size << Array<const void>(data.ptr.get(), data.size);
+}
+
+template <class T>
+void DataOStream::_writeSerializable(const T&, const boost::false_type*)
+{
 }
 
 template <>
